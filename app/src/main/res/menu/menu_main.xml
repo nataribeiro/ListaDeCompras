@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.com.natanael.listadecompras.MainActivity">
+    <item
+        android:id="@+id/action_novalista"
+        android:orderInCategory="100"
+        android:title="@string/action_novalista"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_historico"
+        android:orderInCategory="100"
+        android:title="@string/action_historico"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_config"
+        android:orderInCategory="100"
+        android:title="@string/action_config"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sair"
+        android:orderInCategory="100"
+        android:title="@string/action_sair"
+        app:showAsAction="never" />
+</menu>

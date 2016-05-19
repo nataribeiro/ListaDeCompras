@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Lista de Compras</string>
+    <string name="action_novalista">Nova Lista</string>
+    <string name="action_historico">Ver histórico</string>
+    <string name="action_config">Configurações</string>
+    <string name="action_sair">Sair</string>
+</resources>
