@@ -11,15 +11,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:layout_weight="0.8"
-        android:id="@+id/id_nomeProduto" />
+        android:layout_weight="1"
+        android:id="@+id/id_dataCompra" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Small Text"
-        android:layout_weight="1.2"
-        android:id="@+id/id_quantidadeProduto" />
+        android:layout_weight="1"
+        android:id="@+id/id_valorCompra" />
 
 </LinearLayout>

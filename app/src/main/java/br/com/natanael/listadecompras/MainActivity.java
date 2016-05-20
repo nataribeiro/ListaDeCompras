@@ -1,5 +1,6 @@
 package br.com.natanael.listadecompras;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 import br.com.natanael.listadecompras.Estruturas.Produto;
@@ -108,21 +112,28 @@ public class MainActivity extends AppCompatActivity {
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
                 ListaCompras listaCompras = new ListaCompras();
-                listaCompras.addProduto(new Produto("Sabão em pó", 12.5));
-                listaCompras.addProduto(new Produto("Detergente", 3.25));
-                listaCompras.addProduto(new Produto("Sabonete", 1.25));
+                listaCompras.addProduto(new Produto("Sabão em pó", 1));
+                listaCompras.addProduto(new Produto("Detergente", 2));
+                listaCompras.addProduto(new Produto("Sabonete", 5));
 
                 ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
                 ListaComprasAdapter adapter = new ListaComprasAdapter(rootView.getContext(), listaCompras);
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
+                        //TODO Abrir fragment de cadastro de valor
+                        view.setBackgroundColor(Color.GREEN);
+                    }
+                });
             }else {
-                ListaCompras listaCompras = new ListaCompras();
-                listaCompras.addProduto(new Produto("10/05/2016", 97.81));
-                listaCompras.addProduto(new Produto("28/04/2016", 84.79));
-                listaCompras.addProduto(new Produto("12/04/2016", 122.42));
+                List<ListaCompras> historico = new ArrayList<>();
+                historico.add(new ListaCompras());
+                historico.add(new ListaCompras());
 
                 ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
-                ListaComprasAdapter adapter = new ListaComprasAdapter(rootView.getContext(), listaCompras);
+                ListaHistoricoAdapter adapter = new ListaHistoricoAdapter(rootView.getContext(), historico);
                 listView.setAdapter(adapter);
             }
 

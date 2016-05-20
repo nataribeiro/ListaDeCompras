@@ -2,6 +2,7 @@ package br.com.natanael.listadecompras.Estruturas;
 
 import android.provider.CalendarContract;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -27,14 +28,16 @@ public class ListaCompras {
     public double getValorTotalLista(){
         double rValorTotal = 0;
         for (Produto p:this.listaProdutos) {
-            rValorTotal += p.getValor();
+            rValorTotal += p.getValorTotal();
         }
 
         return rValorTotal;
     }
 
-    public Calendar getData() {
-        return data;
+    public String getData() {
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = df.format(data.getTime());
+        return formattedDate;
     }
 
     public List<Produto> getListaProdutos() {

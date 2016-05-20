@@ -48,8 +48,8 @@ public class ListaComprasAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.list_item, null);
             TextView nomeProd = (TextView) convertView.findViewById(R.id.id_nomeProduto);
             nomeProd.setText(listaCompras.getListaProdutos().get(position).getNome());
-            TextView valorProd = (TextView) convertView.findViewById(R.id.id_valorProduto);
-            valorProd.setText(String.valueOf(listaCompras.getListaProdutos().get(position).getValor()));
+            TextView valorProd = (TextView) convertView.findViewById(R.id.id_quantidadeProduto);
+            valorProd.setText(String.valueOf(listaCompras.getListaProdutos().get(position).getQuantidade()));
         }
 
         return convertView;
