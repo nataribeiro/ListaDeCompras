@@ -1,5 +1,6 @@
 package br.com.natanael.listadecompras.Estruturas;
 
+import android.content.Context;
 import android.provider.CalendarContract;
 
 import java.text.SimpleDateFormat;
@@ -7,31 +8,42 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.natanael.listadecompras.dao.ListaComprasItemDao;
+import br.com.natanael.listadecompras.dao.bd.ListaComprasDaoBd;
+
 /**
  * Created by Natanael on 16/05/2016.
  */
 public class ListaCompras {
+    private Integer id;
     private Calendar data;
-    private List<Produto> listaProdutos;
+    private double valor_total;
+    private List<ListaComprasItem> listaItens;
 
-    public  ListaCompras(){
-        listaProdutos = new ArrayList<>();
-        //Usar quando for finalizar a lista!
-            data = Calendar.getInstance();
-            data.get(Calendar.DATE);
+    public ListaCompras(Integer id, Calendar data, double valor_total){
+        this.id = id;
+        this.data = data;
+        this.valor_total = valor_total;
     }
 
-    public void addProduto(Produto p){
-        this.listaProdutos.add(p);
+    public ListaCompras(Context contexto){
+        ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(contexto);
+        listaItens = new ArrayList<>();
+        this.valor_total = 0;
+        data = Calendar.getInstance();
+        data.get(Calendar.DATE);
+        DAOListaCompras.insert(this);
+    }
+
+    public void addProduto(ListaComprasItem item){
+        item.setListaComprasId(this.getId());
+        item.setSequencia(this.listaItens.size());
+        this.listaItens.add(item);
+        this.valor_total += item.getValor_total();
     }
 
     public double getValorTotalLista(){
-        double rValorTotal = 0;
-        for (Produto p:this.listaProdutos) {
-            rValorTotal += p.getValorTotal();
-        }
-
-        return rValorTotal;
+        return valor_total;
     }
 
     public String getData() {
@@ -40,7 +52,21 @@ public class ListaCompras {
         return formattedDate;
     }
 
-    public List<Produto> getListaProdutos() {
-        return listaProdutos;
+    public List<ListaComprasItem> getListaItens() {
+        return listaItens;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getInsertableData(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(data);
+        return date;
     }
 }

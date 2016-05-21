@@ -7,38 +7,27 @@ import java.util.ArrayList;
  */
 public class Produto {
 
+    private Integer id;
     private String nome;
-    private int quantidade;
-    private double valorUnitario;
-    private double valorTotal;
 
-    private ArrayList<Double> historicoValores;
-
-    public Produto(String nome, int quantidade){
+    public Produto(Integer id, String nome){
+        this.id = id;
         this.nome = nome;
-        this.quantidade = quantidade;
     }
 
-    public Produto(String nome, int quantidade, double valorUnitario){
+    public Produto(String nome){
         this.nome = nome;
-        this.quantidade = quantidade;
-        this.valorUnitario = valorUnitario;
-        this.valorTotal = this.valorUnitario * this.quantidade;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public int getQuantidade() {
-        return quantidade;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public double getValorUnitario() {
-        return valorUnitario;
-    }
-
-    public double getValorTotal() {
-        return valorTotal;
+    public Integer getId() {
+        return id;
     }
 }

@@ -18,9 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
+import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
 import br.com.natanael.listadecompras.Estruturas.Produto;
 
 public class MainActivity extends AppCompatActivity {
@@ -111,10 +113,13 @@ public class MainActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
-                ListaCompras listaCompras = new ListaCompras();
-                listaCompras.addProduto(new Produto("Sabão em pó", 1));
-                listaCompras.addProduto(new Produto("Detergente", 2));
-                listaCompras.addProduto(new Produto("Sabonete", 5));
+                ListaComprasItem listaComprasItem = new ListaComprasItem(new Produto("Produto 1"), 5);
+                ListaComprasItem listaComprasItem2 = new ListaComprasItem(new Produto("Produto 2"), 1);
+                ListaComprasItem listaComprasItem3 = new ListaComprasItem(new Produto("Produto 3"), 3);
+                ListaCompras listaCompras = new ListaCompras(getContext());
+                listaCompras.addProduto(listaComprasItem);
+                listaCompras.addProduto(listaComprasItem2);
+                listaCompras.addProduto(listaComprasItem3);
 
                 ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
                 ListaComprasAdapter adapter = new ListaComprasAdapter(rootView.getContext(), listaCompras);
@@ -129,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 });
             }else {
                 List<ListaCompras> historico = new ArrayList<>();
-                historico.add(new ListaCompras());
-                historico.add(new ListaCompras());
+                historico.add(new ListaCompras(getContext()));
+                historico.add(new ListaCompras(getContext()));
 
                 ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
                 ListaHistoricoAdapter adapter = new ListaHistoricoAdapter(rootView.getContext(), historico);

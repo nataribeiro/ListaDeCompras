@@ -27,12 +27,12 @@ public class ListaComprasAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return listaCompras.getListaProdutos().size();
+        return listaCompras.getListaItens().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listaCompras.getListaProdutos().get(position);
+        return listaCompras.getListaItens().get(position);
     }
 
     @Override
@@ -47,9 +47,9 @@ public class ListaComprasAdapter extends BaseAdapter {
         if(convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item, null);
             TextView nomeProd = (TextView) convertView.findViewById(R.id.id_nomeProduto);
-            nomeProd.setText(listaCompras.getListaProdutos().get(position).getNome());
+            nomeProd.setText(listaCompras.getListaItens().get(position).getProduto().getNome());
             TextView valorProd = (TextView) convertView.findViewById(R.id.id_quantidadeProduto);
-            valorProd.setText(String.valueOf(listaCompras.getListaProdutos().get(position).getQuantidade()));
+            valorProd.setText(String.valueOf(listaCompras.getListaItens().get(position).getQuantidade()));
         }
 
         return convertView;
