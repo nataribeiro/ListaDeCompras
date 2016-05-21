@@ -32,6 +32,7 @@ public class ListaComprasDaoBd implements ListaComprasDao {
         ContentValues dados = new ContentValues();
         dados.put("data", listaCompras.getInsertableData());
         dados.put("valor_total", listaCompras.getValorTotalLista());
+        dados.put("finalizado", listaCompras.getFinalizado());
         long id = banco.insert("ListaCompras", null, dados);
         listaCompras.setId((int) id);
         banco.close();
@@ -51,6 +52,7 @@ public class ListaComprasDaoBd implements ListaComprasDao {
         ContentValues dados = new ContentValues();
         dados.put("data", listaCompras.getInsertableData());
         dados.put("valor_total", listaCompras.getValorTotalLista());
+        dados.put("finalizado", listaCompras.getFinalizado());
         banco.update("ListaCompras", dados, "id=?", new String[]{listaCompras.getId().toString()});
         banco.close();
     }
@@ -61,13 +63,14 @@ public class ListaComprasDaoBd implements ListaComprasDao {
 
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaCompras",
-                new String[]{"id","data","valor_total"},
+                new String[]{"id","data","valor_total","finalizado"},
                 null, null, null, null, null);
 
         while(cursor.moveToNext()){
             ListaCompras listaCompras = new ListaCompras((cursor.getInt(cursor.getColumnIndex("id"))),
                     ConvertToCalendar(cursor.getString(cursor.getColumnIndex("data"))),
-                    cursor.getDouble(cursor.getColumnIndex("valor_total")));
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("finalizado")));
 
             listaListaCompras.add(listaCompras);
         }
@@ -93,14 +96,15 @@ public class ListaComprasDaoBd implements ListaComprasDao {
     public ListaCompras procurarPorId(Integer id) {
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaCompras",
-                new String[]{"id","data","valor_total"},
+                new String[]{"id","data","valor_total","finalizado"},
                 "id=?", new String[]{id.toString()},
                 null, null, null);
 
         if(cursor.moveToNext()){
             ListaCompras listaCompras = new ListaCompras((cursor.getInt(cursor.getColumnIndex("id"))),
                     ConvertToCalendar(cursor.getString(cursor.getColumnIndex("data"))),
-                    cursor.getDouble(cursor.getColumnIndex("valor_total")));
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("finalizado")));
 
             return(listaCompras);
         }

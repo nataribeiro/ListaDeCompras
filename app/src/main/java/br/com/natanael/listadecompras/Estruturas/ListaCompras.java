@@ -18,18 +18,21 @@ public class ListaCompras {
     private Integer id;
     private Calendar data;
     private double valor_total;
+    private Boolean finalizado;
     private List<ListaComprasItem> listaItens;
 
-    public ListaCompras(Integer id, Calendar data, double valor_total){
+    public ListaCompras(Integer id, Calendar data, double valor_total, String finalizado){
         this.id = id;
         this.data = data;
         this.valor_total = valor_total;
+        this.finalizado = finalizado.equals("S");
     }
 
     public ListaCompras(Context contexto){
         ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(contexto);
         listaItens = new ArrayList<>();
         this.valor_total = 0;
+        finalizado = false;
         data = Calendar.getInstance();
         data.get(Calendar.DATE);
         DAOListaCompras.insert(this);
@@ -66,7 +69,12 @@ public class ListaCompras {
 
     public String getInsertableData(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(data);
+        String date = sdf.format(data.getTime());
+
         return date;
+    }
+
+    public Boolean getFinalizado() {
+        return finalizado;
     }
 }

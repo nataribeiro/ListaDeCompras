@@ -17,7 +17,8 @@ public class BancoDadosOpenHelper extends SQLiteOpenHelper{
     private static String createListaCompras = "CREATE TABLE ListaCompras" +
             "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "data DATE," +
-            "valor_total double precision)";
+            "valor_total double precision," +
+            "finalizado VARCHAR(1))";
 
     private static String createListaComprasItem = "CREATE TABLE ListaComprasItem" +
             "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
