@@ -1,5 +1,7 @@
 package br.com.natanael.listadecompras.Estruturas;
 
+import android.content.Context;
+
 import br.com.natanael.listadecompras.dao.bd.ProdutoDaoBd;
 
 /**
@@ -15,7 +17,8 @@ public class ListaComprasItem {
     private double valor_unitario;
     private double valor_total;
 
-    public  ListaComprasItem(Integer id, int listaComprasId, int sequencia, int idProduto, int quantidade, double valor_unitario, double valor_total){
+    public  ListaComprasItem(Context contexto, Integer id, int listaComprasId, int sequencia, int idProduto, int quantidade, double valor_unitario, double valor_total){
+        this.DAOProduto = new ProdutoDaoBd(contexto);
         this.id = id;
         this.listaComprasId = listaComprasId;
         this.sequencia = sequencia;
@@ -85,9 +88,5 @@ public class ListaComprasItem {
 
     public void setSequencia(int sequencia) {
         this.sequencia = sequencia;
-    }
-
-    public void setDAOProduto(ProdutoDaoBd DAOProduto) {
-        this.DAOProduto = DAOProduto;
     }
 }

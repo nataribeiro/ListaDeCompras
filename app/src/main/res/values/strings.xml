@@ -4,4 +4,13 @@
     <string name="action_historico">Ver histórico</string>
     <string name="action_config">Configurações</string>
     <string name="action_sair">Sair</string>
+    <string name="editText_nomeProduto">Nome do produto</string>
+    <string name="button_add">Adicionar Produto</string>
+    <string name="action_addProduto">Add Produto</string>
+    <string name="title_activity_nova_lista_compras">NovaListaComprasActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="editText_quantidade">Quantidade</string>
+    <string name="button_cancelar">Cancelar</string>
 </resources>

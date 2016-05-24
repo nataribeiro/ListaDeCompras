@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.sql.SQLInput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,10 +19,12 @@ import br.com.natanael.listadecompras.dao.ListaComprasDao;
  * Created by 631610277 on 21/05/16.
  */
 public class ListaComprasDaoBd implements ListaComprasDao {
+    private Context contexto;
     private BancoDadosOpenHelper bdOpenHelper;
 
     public ListaComprasDaoBd(Context contexto)
     {
+        this.contexto = contexto;
         bdOpenHelper = new BancoDadosOpenHelper(contexto);
     }
 
@@ -32,7 +35,7 @@ public class ListaComprasDaoBd implements ListaComprasDao {
         ContentValues dados = new ContentValues();
         dados.put("data", listaCompras.getInsertableData());
         dados.put("valor_total", listaCompras.getValorTotalLista());
-        dados.put("finalizado", listaCompras.getFinalizado());
+        dados.put("finalizado", listaCompras.getFinalizado() ? "S" : "N");
         long id = banco.insert("ListaCompras", null, dados);
         listaCompras.setId((int) id);
         banco.close();
@@ -67,13 +70,15 @@ public class ListaComprasDaoBd implements ListaComprasDao {
                 null, null, null, null, null);
 
         while(cursor.moveToNext()){
-            ListaCompras listaCompras = new ListaCompras((cursor.getInt(cursor.getColumnIndex("id"))),
+            ListaCompras listaCompras = new ListaCompras(contexto,
+                    (cursor.getInt(cursor.getColumnIndex("id"))),
                     ConvertToCalendar(cursor.getString(cursor.getColumnIndex("data"))),
                     cursor.getDouble(cursor.getColumnIndex("valor_total")),
                     cursor.getString(cursor.getColumnIndex("finalizado")));
 
             listaListaCompras.add(listaCompras);
         }
+        banco.close();
         return(listaListaCompras);
     }
 
@@ -101,13 +106,60 @@ public class ListaComprasDaoBd implements ListaComprasDao {
                 null, null, null);
 
         if(cursor.moveToNext()){
-            ListaCompras listaCompras = new ListaCompras((cursor.getInt(cursor.getColumnIndex("id"))),
+            ListaCompras listaCompras = new ListaCompras(contexto,
+                    (cursor.getInt(cursor.getColumnIndex("id"))),
                     ConvertToCalendar(cursor.getString(cursor.getColumnIndex("data"))),
                     cursor.getDouble(cursor.getColumnIndex("valor_total")),
                     cursor.getString(cursor.getColumnIndex("finalizado")));
 
+            banco.close();
             return(listaCompras);
         }
-        return(null);
+        banco.close();
+        return null;
+    }
+
+    @Override
+    public ListaCompras retornaListaNaoFinalizada() {
+        SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
+        Cursor cursor = banco.query("ListaCompras",
+                new String[] { "id", "data", "valor_total", "finalizado"},
+                "finalizado=?", new String[] { "S" },
+                null, null, null);
+        if(cursor.moveToNext()){
+            ListaCompras listaCompras = new ListaCompras(contexto,
+                    (cursor.getInt(cursor.getColumnIndex("id"))),
+                    ConvertToCalendar(cursor.getString(cursor.getColumnIndex("data"))),
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("finalizado")));
+
+            banco.close();
+            return listaCompras;
+        }
+        banco.close();
+        return null;
+    }
+
+    @Override
+    public List<ListaCompras> retornaListasFinalizadas() {
+        List<ListaCompras> listaListaCompras = new ArrayList<ListaCompras>();
+
+        SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
+        Cursor cursor = banco.query("ListaCompras",
+                new String[]{"id","data","valor_total","finalizado"},
+                "finalizado=?", new String[] { "N" },
+                null, null, "data desc");
+
+        while(cursor.moveToNext()){
+            ListaCompras listaCompras = new ListaCompras(contexto,
+                    (cursor.getInt(cursor.getColumnIndex("id"))),
+                    ConvertToCalendar(cursor.getString(cursor.getColumnIndex("data"))),
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("finalizado")));
+
+            listaListaCompras.add(listaCompras);
+        }
+        banco.close();
+        return(listaListaCompras);
     }
 }

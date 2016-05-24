@@ -65,6 +65,7 @@ public class ProdutoDaoBd implements ProdutoDao {
 
             listaProdutos.add(produto);
         }
+        banco.close();
         return listaProdutos;
     }
 
@@ -79,9 +80,10 @@ public class ProdutoDaoBd implements ProdutoDao {
         if(cursor.moveToNext()){
             Produto produto = new Produto((cursor.getInt(cursor.getColumnIndex("id"))),
                     cursor.getString(cursor.getColumnIndex("nome")));
-
+            banco.close();
             return(produto);
         }
+        banco.close();
         return(null);
     }
 
@@ -100,6 +102,7 @@ public class ProdutoDaoBd implements ProdutoDao {
 
             listaProdutos.add(produto);
         }
+        banco.close();
         return listaProdutos;
     }
 }

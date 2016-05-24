@@ -3,14 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="br.com.natanael.listadecompras.MainActivity">
     <item
+        android:id="@+id/action_addProduto"
+        android:orderInCategory="100"
+        android:title="@string/action_addProduto"
+        android:visible="false"
+        android:icon="@drawable/ic_add_white_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_novalista"
         android:orderInCategory="100"
         android:title="@string/action_novalista"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_historico"
-        android:orderInCategory="100"
-        android:title="@string/action_historico"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_config"

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
 import br.com.natanael.listadecompras.dao.ListaComprasItemDao;
 
@@ -16,9 +17,11 @@ import br.com.natanael.listadecompras.dao.ListaComprasItemDao;
  */
 public class ListaComprasItemDaoDb implements ListaComprasItemDao {
     private BancoDadosOpenHelper bdOpenHelper;
+    private Context contexto;
 
     public ListaComprasItemDaoDb(Context contexto)
     {
+        this.contexto = contexto;
         bdOpenHelper = new BancoDadosOpenHelper(contexto);
     }
     @Override
@@ -69,7 +72,8 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
                 null, null, null, null, null);
 
         while(cursor.moveToNext()){
-            ListaComprasItem item = new ListaComprasItem((cursor.getInt(cursor.getColumnIndex("id"))),
+            ListaComprasItem item = new ListaComprasItem(contexto,
+                    cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getInt(cursor.getColumnIndex("id_listacompras")),
                     cursor.getInt(cursor.getColumnIndex("sequencia")),
                     cursor.getInt(cursor.getColumnIndex("id_produto")),
@@ -79,6 +83,7 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
 
             listaItens.add(item);
         }
+        banco.close();
         return(listaItens);
     }
 
@@ -91,7 +96,8 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
                 null, null, null);
 
         if(cursor.moveToNext()){
-            ListaComprasItem item = new ListaComprasItem((cursor.getInt(cursor.getColumnIndex("id"))),
+            ListaComprasItem item = new ListaComprasItem(contexto,
+                    cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getInt(cursor.getColumnIndex("id_listacompras")),
                     cursor.getInt(cursor.getColumnIndex("sequencia")),
                     cursor.getInt(cursor.getColumnIndex("id_produto")),
@@ -99,8 +105,34 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
                     cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
                     cursor.getDouble(cursor.getColumnIndex("valor_total")));
 
+            banco.close();
             return(item);
         }
+        banco.close();
         return(null);
+    }
+
+    @Override
+    public List<ListaComprasItem> carregaItensDaListaCompras(int id_listacompras) {
+        List<ListaComprasItem> listaItens = new ArrayList<ListaComprasItem>();
+        SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
+        Cursor cursor = banco.query("ListaComprasItem",
+                new String[] {"id", "id_listacompras", "sequencia", "id_produto", "quantidade", "valor_unitario", "valor_total"},
+                "id_listacompras=?", new String[] { String.valueOf(id_listacompras) },
+                null, null, "sequencia");
+        while(cursor.moveToNext()){
+            ListaComprasItem item = new ListaComprasItem(contexto,
+                    cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("id_listacompras")),
+                    cursor.getInt(cursor.getColumnIndex("sequencia")),
+                    cursor.getInt(cursor.getColumnIndex("id_produto")),
+                    cursor.getInt(cursor.getColumnIndex("quantidade")),
+                    cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")));
+
+            listaItens.add(item);
+        }
+        banco.close();
+        return listaItens;
     }
 }

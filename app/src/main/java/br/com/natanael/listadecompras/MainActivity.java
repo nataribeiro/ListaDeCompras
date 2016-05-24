@@ -1,5 +1,7 @@
 package br.com.natanael.listadecompras;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,9 +27,11 @@ import java.util.List;
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
 import br.com.natanael.listadecompras.Estruturas.Produto;
+import br.com.natanael.listadecompras.dao.bd.ListaComprasDaoBd;
 
 public class MainActivity extends AppCompatActivity {
-    private ListaCompras listaCompras;
+    private static Boolean ExisteListaCorrente;
+    private static ListaCompras listaComprasAtual;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
@@ -66,7 +71,27 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_novalista) {
-            return true;
+            if(!ExisteListaCorrente) {
+                AbrirActivityNovaListaCompras();
+            } else {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Deseja excluir a lista atual?");
+                builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(getBaseContext());
+                        DAOListaCompras.excluir(listaComprasAtual);
+                        AbrirActivityNovaListaCompras();
+                    }
+                });
+                builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+            }
         }
         if (id == R.id.action_historico) {
             return true;
@@ -79,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void AbrirActivityNovaListaCompras(){
+        Intent it = new Intent(this, NovaListaComprasActivity.class);
+        startActivity(it);
     }
 
 
@@ -111,31 +141,30 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(getContext());
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
-                ListaComprasItem listaComprasItem = new ListaComprasItem(new Produto("Produto 1"), 5);
-                ListaComprasItem listaComprasItem2 = new ListaComprasItem(new Produto("Produto 2"), 1);
-                ListaComprasItem listaComprasItem3 = new ListaComprasItem(new Produto("Produto 3"), 3);
-                ListaCompras listaCompras = new ListaCompras(getContext());
-                listaCompras.addProduto(listaComprasItem);
-                listaCompras.addProduto(listaComprasItem2);
-                listaCompras.addProduto(listaComprasItem3);
+                ListaCompras listaCompras = DAOListaCompras.retornaListaNaoFinalizada();
 
-                ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
-                ListaComprasAdapter adapter = new ListaComprasAdapter(rootView.getContext(), listaCompras);
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                if(listaCompras != null) {
+                    listaComprasAtual = listaCompras;
+                    ExisteListaCorrente = true;
+                    ListView listView = (ListView) rootView.findViewById(R.id.listView_listaAtual);
+                    ListaComprasAdapter adapter = new ListaComprasAdapter(rootView.getContext(), listaCompras);
+                    listView.setAdapter(adapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
-                        //TODO Abrir fragment de cadastro de valor
-                        view.setBackgroundColor(Color.GREEN);
-                    }
-                });
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
+                            //TODO Abrir fragment de cadastro de valor
+                            view.setBackgroundColor(Color.GREEN);
+                        }
+                    });
+                } else {
+                    ExisteListaCorrente = false;
+                }
             }else {
-                List<ListaCompras> historico = new ArrayList<>();
-                historico.add(new ListaCompras(getContext()));
-                historico.add(new ListaCompras(getContext()));
+                List<ListaCompras> historico = DAOListaCompras.retornaListasFinalizadas();
 
                 ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
                 ListaHistoricoAdapter adapter = new ListaHistoricoAdapter(rootView.getContext(), historico);

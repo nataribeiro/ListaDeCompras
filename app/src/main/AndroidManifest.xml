@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NovaListaComprasActivity"
+            android:label="@string/title_activity_nova_lista_compras"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddProdutoActivity"></activity>
     </application>
 
 </manifest>
