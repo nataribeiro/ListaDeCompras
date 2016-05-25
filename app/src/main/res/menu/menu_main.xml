@@ -11,14 +11,19 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_editalista"
+        android:orderInCategory="100"
+        android:title="@string/action_editalista"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_novalista"
         android:orderInCategory="100"
         android:title="@string/action_novalista"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_config"
+        android:id="@+id/action_limparbancodados"
         android:orderInCategory="100"
-        android:title="@string/action_config"
+        android:title="@string/action_limparbd"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_sair"

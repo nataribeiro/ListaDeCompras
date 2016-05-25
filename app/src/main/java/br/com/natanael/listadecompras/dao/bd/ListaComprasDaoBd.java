@@ -55,7 +55,7 @@ public class ListaComprasDaoBd implements ListaComprasDao {
         ContentValues dados = new ContentValues();
         dados.put("data", listaCompras.getInsertableData());
         dados.put("valor_total", listaCompras.getValorTotalLista());
-        dados.put("finalizado", listaCompras.getFinalizado());
+        dados.put("finalizado", listaCompras.getFinalizado() ? "S" : "N");
         banco.update("ListaCompras", dados, "id=?", new String[]{listaCompras.getId().toString()});
         banco.close();
     }
@@ -124,7 +124,7 @@ public class ListaComprasDaoBd implements ListaComprasDao {
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaCompras",
                 new String[] { "id", "data", "valor_total", "finalizado"},
-                "finalizado=?", new String[] { "S" },
+                "finalizado=?", new String[] { "N" },
                 null, null, null);
         if(cursor.moveToNext()){
             ListaCompras listaCompras = new ListaCompras(contexto,
@@ -147,7 +147,7 @@ public class ListaComprasDaoBd implements ListaComprasDao {
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaCompras",
                 new String[]{"id","data","valor_total","finalizado"},
-                "finalizado=?", new String[] { "N" },
+                "finalizado=?", new String[] { "S" },
                 null, null, "data desc");
 
         while(cursor.moveToNext()){

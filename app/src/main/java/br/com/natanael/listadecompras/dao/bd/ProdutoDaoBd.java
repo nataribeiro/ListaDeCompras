@@ -105,4 +105,22 @@ public class ProdutoDaoBd implements ProdutoDao {
         banco.close();
         return listaProdutos;
     }
+
+    @Override
+    public Produto procurarPorNome(String nome) {
+        SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
+        Cursor cursor = banco.query("Produto",
+                new String[]{"id","nome"},
+                "nome=?", new String[]{ nome },
+                null, null, null);
+
+        if(cursor.moveToNext()){
+            Produto produto = new Produto((cursor.getInt(cursor.getColumnIndex("id"))),
+                    cursor.getString(cursor.getColumnIndex("nome")));
+            banco.close();
+            return(produto);
+        }
+        banco.close();
+        return(null);
+    }
 }

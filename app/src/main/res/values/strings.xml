@@ -13,4 +13,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="editText_quantidade">Quantidade</string>
     <string name="button_cancelar">Cancelar</string>
+    <string name="action_editalista">Editar Lista</string>
+    <string name="action_limparbd">Limpar base de dados</string>
+    <string name="finalizar_compra">Finalizar Compra</string>
 </resources>

@@ -1,5 +1,6 @@
 package br.com.natanael.listadecompras;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,7 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,9 +30,13 @@ import java.util.List;
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
 import br.com.natanael.listadecompras.Estruturas.Produto;
+import br.com.natanael.listadecompras.dao.bd.BancoDadosOpenHelper;
 import br.com.natanael.listadecompras.dao.bd.ListaComprasDaoBd;
 
 public class MainActivity extends AppCompatActivity {
+    private final static int NovaListaComprasRequest = 1;
+    private final static int EditListaComprasRequest = 2;
+
     private static Boolean ExisteListaCorrente;
     private static ListaCompras listaComprasAtual;
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -42,6 +49,33 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(this);
+        List<ListaCompras> teste = DAOListaCompras.listar();
+
+        InstanciaTabFragment();
+    }
+
+    public void onClickFinalizaCompra(View v){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Finalizar compra?");
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                listaComprasAtual.setFinalizado(true);
+                ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(getBaseContext());
+                DAOListaCompras.update(listaComprasAtual);
+            }
+        });
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.show();
+    }
+
+    private void InstanciaTabFragment(){
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -49,16 +83,42 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
 
+    private void AbrirActivityNovaListaCompras(int request){
+        Intent it = new Intent(this, NovaListaComprasActivity.class);
+        startActivityForResult(it, request);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NovaListaComprasRequest) {
+            if(resultCode == Activity.RESULT_OK){
+                InstanciaTabFragment();
+            }
+        }
+        else if(requestCode == EditListaComprasRequest){
+            if(resultCode == Activity.RESULT_OK){
+                InstanciaTabFragment();
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        if(!ExisteListaCorrente) {
+            MenuItem menuItem = menu.findItem(R.id.action_editalista);
+            menuItem.setVisible(false);
+        }
         return true;
     }
 
@@ -72,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_novalista) {
             if(!ExisteListaCorrente) {
-                AbrirActivityNovaListaCompras();
+                AbrirActivityNovaListaCompras(NovaListaComprasRequest);
             } else {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Deseja excluir a lista atual?");
@@ -81,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(getBaseContext());
                         DAOListaCompras.excluir(listaComprasAtual);
-                        AbrirActivityNovaListaCompras();
+                        AbrirActivityNovaListaCompras(NovaListaComprasRequest);
                     }
                 });
                 builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
@@ -93,11 +153,13 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         }
-        if (id == R.id.action_historico) {
-            return true;
+        if (id == R.id.action_editalista) {
+               AbrirActivityNovaListaCompras(EditListaComprasRequest);
         }
-        if (id == R.id.action_config) {
-            return true;
+        if (id == R.id.action_limparbancodados){
+            BancoDadosOpenHelper bdHelper = new BancoDadosOpenHelper(this);
+            bdHelper.ClearDatabase();
+            Toast.makeText(this, "Base de dados foi zerada", Toast.LENGTH_SHORT).show();
         }
         if (id == R.id.action_sair) {
             this.finish();
@@ -106,10 +168,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void AbrirActivityNovaListaCompras(){
-        Intent it = new Intent(this, NovaListaComprasActivity.class);
-        startActivity(it);
-    }
 
 
     /**
@@ -121,6 +179,11 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        @Override
+        public void onResume() {
+            super.onResume();
+        }
 
         public PlaceholderFragment() {
         }
@@ -156,12 +219,15 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                            //TODO Abrir fragment de cadastro de valor
-                            view.setBackgroundColor(Color.GREEN);
+                            if(view.getDrawingCacheBackgroundColor() == Color.GREEN)
+                                view.setBackgroundColor(Color.TRANSPARENT);
+                            else
+                                view.setBackgroundColor(Color.GREEN);
                         }
                     });
                 } else {
                     ExisteListaCorrente = false;
+                    (rootView.findViewById(R.id.button_finalizarCompra)).setVisibility(View.GONE);
                 }
             }else {
                 List<ListaCompras> historico = DAOListaCompras.retornaListasFinalizadas();
@@ -169,11 +235,13 @@ public class MainActivity extends AppCompatActivity {
                 ListView listView = (ListView)rootView.findViewById(R.id.listView_listaAtual);
                 ListaHistoricoAdapter adapter = new ListaHistoricoAdapter(rootView.getContext(), historico);
                 listView.setAdapter(adapter);
+                (rootView.findViewById(R.id.button_finalizarCompra)).setVisibility(View.GONE);
             }
 
             return rootView;
         }
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

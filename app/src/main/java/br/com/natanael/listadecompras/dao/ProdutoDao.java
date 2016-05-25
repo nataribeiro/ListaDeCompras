@@ -10,4 +10,5 @@ import br.com.natanael.listadecompras.dao.GenericDao;
  */
 public interface ProdutoDao extends GenericDao<Produto> {
     public List<Produto> containingNome(String filtro);
+    public Produto procurarPorNome(String nome);
 }

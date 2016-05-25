@@ -32,7 +32,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="number|textPersonName"
                 android:hint="@string/editText_quantidade"
                 android:ems="10"
                 android:id="@+id/editText_quantidade" />
@@ -60,6 +60,7 @@
             android:text="@string/button_add"
             android:id="@+id/button_addItem"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="onClickAdicionarProduto" />
     </LinearLayout>
 </LinearLayout>

@@ -40,6 +40,13 @@ public class BancoDadosOpenHelper extends SQLiteOpenHelper{
         banco.execSQL(createListaComprasItem);
     }
 
+    public void ClearDatabase(){
+        SQLiteDatabase banco = getWritableDatabase();
+        banco.execSQL("delete from ListaCompras");
+        banco.execSQL("delete from ListaComprasItem");
+        banco.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase banco, int versaoAntiga, int versaoNova) {
 

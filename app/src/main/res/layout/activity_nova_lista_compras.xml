@@ -22,10 +22,46 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_nova_lista_compras"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:weightSum="2"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="br.com.natanael.listadecompras.NovaListaComprasActivity">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="0.4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_addedProducts" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1.6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salvar Lista"
+                android:id="@+id/button_salvarLista"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onClickSalvarLista" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -34,6 +34,10 @@ public class NovaListaComprasActivity extends AppCompatActivity {
         if(listaAtual == null)
             listaAtual = new ListaCompras(this);
 
+        PopulaListView();
+    }
+
+    private void PopulaListView(){
         ListaComprasAdapter adapter = new ListaComprasAdapter(this, listaAtual);
         ListView listView = (ListView)findViewById(R.id.listView_addedProducts);
         listView.setAdapter(adapter);
@@ -50,6 +54,11 @@ public class NovaListaComprasActivity extends AppCompatActivity {
     {
         MenuItem menuItem = menu.findItem(R.id.action_addProduto);
         menuItem.setVisible(true);
+
+        menu.findItem(R.id.action_editalista).setVisible(false);
+        menu.findItem(R.id.action_novalista).setVisible(false);
+        menu.findItem(R.id.action_limparbancodados).setVisible(false);
+
         return true;
     }
 
@@ -60,26 +69,35 @@ public class NovaListaComprasActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_config) {
-            return true;
-        }
         if (id == R.id.action_sair) {
             this.finish();
         }
         if(id == R.id.action_addProduto) {
+            if(listaAtual.getId() == null)
+                DAOListaCompras.insert(listaAtual);
             Intent it = new Intent(this, AddProdutoActivity.class);
+            it.putExtra("id_listacompras", listaAtual.getId());
             startActivityForResult(it, AddProdutoRequest);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void onClickSalvarLista(View v){
+        if(listaAtual.getId() == null)
+            DAOListaCompras.insert(listaAtual);
+        else
+            DAOListaCompras.update(listaAtual);
+        this.finish();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AddProdutoRequest) {
             if(resultCode == Activity.RESULT_OK){
-                //TODO Carregar/Refresh lista de compras
+                DAOListaCompras = new ListaComprasDaoBd(this);
+                listaAtual = DAOListaCompras.procurarPorId(data.getIntExtra("id_listacompras", -1));
+                PopulaListView();
             }
         }
     }

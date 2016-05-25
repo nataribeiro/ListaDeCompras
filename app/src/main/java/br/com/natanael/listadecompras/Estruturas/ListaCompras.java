@@ -79,4 +79,8 @@ public class ListaCompras {
     public Boolean getFinalizado() {
         return finalizado;
     }
+
+    public void setFinalizado(Boolean finalizado) {
+        this.finalizado = finalizado;
+    }
 }
