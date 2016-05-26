@@ -52,7 +52,8 @@
             android:text="@string/button_cancelar"
             android:id="@+id/button_cancelarAddItem"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="onClickCancelar" />
 
         <Button
             android:layout_width="match_parent"

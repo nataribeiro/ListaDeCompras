@@ -27,7 +27,8 @@ public class BancoDadosOpenHelper extends SQLiteOpenHelper{
             "id_produto INTEGER," +
             "quantidade INTEGER," +
             "valor_unitario DOUBLE PRECISION," +
-            "valor_total DOUBLE PRECISION)";
+            "valor_total DOUBLE PRECISION," +
+            "comprado VARCHAR(1))";
 
     public BancoDadosOpenHelper(Context contexto) {
         super(contexto, nome, null, 1);

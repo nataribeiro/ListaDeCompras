@@ -35,6 +35,7 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
         dados.put("quantidade", item.getQuantidade());
         dados.put("valor_unitario", item.getValor_unitario());
         dados.put("valor_total", item.getValor_total());
+        dados.put("comprado", item.getComprado() ? "S" : "N");
         long id = banco.insert("ListaComprasItem", null, dados);
         item.setId((int) id);
         banco.close();
@@ -58,6 +59,7 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
         dados.put("quantidade", item.getQuantidade());
         dados.put("valor_unitario", item.getValor_unitario());
         dados.put("valor_total", item.getValor_total());
+        dados.put("comprado", item.getComprado() ? "S" : "N");
         banco.update("ListaComprasItem", dados, "id=?", new String[]{item.getId().toString()});
         banco.close();
     }
@@ -68,7 +70,7 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
 
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaComprasItem",
-                new String[]{"id","id_listacompras","sequencia","id_produto","quantidade","valor_unitario","valor_total"},
+                new String[]{"id","id_listacompras","sequencia","id_produto","quantidade","valor_unitario","valor_total","comprado"},
                 null, null, null, null, null);
 
         while(cursor.moveToNext()){
@@ -79,7 +81,8 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
                     cursor.getInt(cursor.getColumnIndex("id_produto")),
                     cursor.getInt(cursor.getColumnIndex("quantidade")),
                     cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
-                    cursor.getDouble(cursor.getColumnIndex("valor_total")));
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("comprado")).equals("S"));
 
             listaItens.add(item);
         }
@@ -91,7 +94,7 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
     public ListaComprasItem procurarPorId(Integer id) {
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaComprasItem",
-                new String[]{"id","id_listacompras","sequencia","id_produto","quantidade","valor_unitario","valor_total"},
+                new String[]{"id","id_listacompras","sequencia","id_produto","quantidade","valor_unitario","valor_total","comprado"},
                 "id=?", new String[]{id.toString()},
                 null, null, null);
 
@@ -103,7 +106,8 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
                     cursor.getInt(cursor.getColumnIndex("id_produto")),
                     cursor.getInt(cursor.getColumnIndex("quantidade")),
                     cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
-                    cursor.getDouble(cursor.getColumnIndex("valor_total")));
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("comprado")).equals("S"));
 
             banco.close();
             return(item);
@@ -117,7 +121,7 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
         List<ListaComprasItem> listaItens = new ArrayList<ListaComprasItem>();
         SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
         Cursor cursor = banco.query("ListaComprasItem",
-                new String[] {"id", "id_listacompras", "sequencia", "id_produto", "quantidade", "valor_unitario", "valor_total"},
+                new String[] {"id", "id_listacompras", "sequencia", "id_produto", "quantidade", "valor_unitario", "valor_total","comprado"},
                 "id_listacompras=?", new String[] { String.valueOf(id_listacompras) },
                 null, null, "sequencia");
         while(cursor.moveToNext()){
@@ -128,7 +132,8 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
                     cursor.getInt(cursor.getColumnIndex("id_produto")),
                     cursor.getInt(cursor.getColumnIndex("quantidade")),
                     cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
-                    cursor.getDouble(cursor.getColumnIndex("valor_total")));
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("comprado")).equals("S"));
 
             listaItens.add(item);
         }

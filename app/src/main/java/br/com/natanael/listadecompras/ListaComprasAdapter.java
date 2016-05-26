@@ -2,14 +2,12 @@ package br.com.natanael.listadecompras;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 
@@ -19,10 +17,12 @@ import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 public class ListaComprasAdapter extends BaseAdapter {
     ListaCompras listaCompras;
     Context contexto;
+    Boolean checkBoxHabilitado;
 
-    public ListaComprasAdapter(Context contexto, ListaCompras listaCompras){
+    public ListaComprasAdapter(Context contexto, ListaCompras listaCompras, Boolean checkBoxHabilitado){
         this.contexto = contexto;
         this.listaCompras = listaCompras;
+        this.checkBoxHabilitado = checkBoxHabilitado;
     }
 
     @Override
@@ -50,6 +50,10 @@ public class ListaComprasAdapter extends BaseAdapter {
             nomeProd.setText(listaCompras.getListaItens().get(position).getProduto().getNome());
             TextView valorProd = (TextView) convertView.findViewById(R.id.id_quantidadeProduto);
             valorProd.setText(String.valueOf(listaCompras.getListaItens().get(position).getQuantidade()));
+            CheckBox checkBox_comprado = (CheckBox) convertView.findViewById(R.id.checkBox_comprado);
+            checkBox_comprado.setChecked(listaCompras.getListaItens().get(position).getComprado());
+            if(!checkBoxHabilitado)
+                checkBox_comprado.setVisibility(View.INVISIBLE);
         }
 
         return convertView;

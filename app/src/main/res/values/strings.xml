@@ -7,13 +7,13 @@
     <string name="editText_nomeProduto">Nome do produto</string>
     <string name="button_add">Adicionar Produto</string>
     <string name="action_addProduto">Add Produto</string>
-    <string name="title_activity_nova_lista_compras">NovaListaComprasActivity</string>
+    <string name="title_activity_nova_lista_compras">Nova Lista de Compras</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="editText_quantidade">Quantidade</string>
     <string name="button_cancelar">Cancelar</string>
     <string name="action_editalista">Editar Lista</string>
     <string name="action_limparbd">Limpar base de dados</string>
     <string name="finalizar_compra">Finalizar Compra</string>
+    <string name="activity_addProduto_name">Adicionar produto</string>
 </resources>

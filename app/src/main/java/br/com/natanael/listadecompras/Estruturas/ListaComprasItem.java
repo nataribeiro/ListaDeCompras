@@ -16,8 +16,9 @@ public class ListaComprasItem {
     private int quantidade;
     private double valor_unitario;
     private double valor_total;
+    private Boolean comprado;
 
-    public  ListaComprasItem(Context contexto, Integer id, int listaComprasId, int sequencia, int idProduto, int quantidade, double valor_unitario, double valor_total){
+    public  ListaComprasItem(Context contexto, Integer id, int listaComprasId, int sequencia, int idProduto, int quantidade, double valor_unitario, double valor_total, Boolean comprado){
         this.DAOProduto = new ProdutoDaoBd(contexto);
         this.id = id;
         this.listaComprasId = listaComprasId;
@@ -26,6 +27,7 @@ public class ListaComprasItem {
         this.quantidade = quantidade;
         this.valor_unitario = valor_unitario;
         this.valor_total = valor_total;
+        this.comprado = comprado;
     }
 
     public ListaComprasItem(Produto produto, int quantidade, double valor_unitario) {
@@ -33,6 +35,7 @@ public class ListaComprasItem {
         this.quantidade = quantidade;
         this.valor_unitario = valor_unitario;
         this.valor_total = (this.quantidade * this.valor_unitario);
+        this.comprado = false;
     }
 
     public ListaComprasItem(Produto produto, int quantidade) {
@@ -40,6 +43,7 @@ public class ListaComprasItem {
         this.quantidade = quantidade;
         this.valor_unitario = -1;
         this.valor_total = -1;
+        this.comprado = false;
     }
 
     public Integer getId() {
@@ -86,7 +90,19 @@ public class ListaComprasItem {
         return sequencia;
     }
 
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
     public void setSequencia(int sequencia) {
         this.sequencia = sequencia;
+    }
+
+    public void setComprado(Boolean comprado) {
+        this.comprado = comprado;
+    }
+
+    public Boolean getComprado() {
+        return comprado;
     }
 }

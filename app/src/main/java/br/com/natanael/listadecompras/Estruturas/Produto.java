@@ -1,6 +1,5 @@
 package br.com.natanael.listadecompras.Estruturas;
 
-import java.util.ArrayList;
 
 /**
  * Created by Natanael on 16/05/2016.

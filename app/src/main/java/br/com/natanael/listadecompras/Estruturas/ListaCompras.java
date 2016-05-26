@@ -1,14 +1,11 @@
 package br.com.natanael.listadecompras.Estruturas;
 
 import android.content.Context;
-import android.provider.CalendarContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import br.com.natanael.listadecompras.dao.ListaComprasItemDao;
 import br.com.natanael.listadecompras.dao.bd.ListaComprasDaoBd;
 import br.com.natanael.listadecompras.dao.bd.ListaComprasItemDaoDb;
 
@@ -19,6 +16,7 @@ public class ListaCompras {
     private Integer id;
     private Calendar data;
     private double valor_total;
+    private int quantidadeTotalItens;
     private Boolean finalizado;
     private List<ListaComprasItem> listaItens;
 
@@ -29,6 +27,10 @@ public class ListaCompras {
         this.finalizado = finalizado.equals("S");
         ListaComprasItemDaoDb DAOListaItem = new ListaComprasItemDaoDb(contexto);
         this.listaItens = DAOListaItem.carregaItensDaListaCompras(id);
+        this.quantidadeTotalItens = 0;
+        for (ListaComprasItem item : listaItens) {
+            this.quantidadeTotalItens += item.getQuantidade();
+        }
     }
 
     public ListaCompras(Context contexto){
@@ -38,6 +40,7 @@ public class ListaCompras {
         finalizado = false;
         data = Calendar.getInstance();
         data.get(Calendar.DATE);
+        this.quantidadeTotalItens = 0;
     }
 
     public void addProduto(ListaComprasItem item){
@@ -45,6 +48,11 @@ public class ListaCompras {
         item.setSequencia(this.listaItens.size());
         this.listaItens.add(item);
         this.valor_total += item.getValor_total();
+        this.quantidadeTotalItens += item.getQuantidade();
+    }
+
+    public int getQuantidadeTotalItens(){
+        return quantidadeTotalItens;
     }
 
     public double getValorTotalLista(){
@@ -82,5 +90,11 @@ public class ListaCompras {
 
     public void setFinalizado(Boolean finalizado) {
         this.finalizado = finalizado;
+    }
+
+    public void finalizarLista(){
+        this.finalizado = true;
+        this.data = Calendar.getInstance();
+        data.get(Calendar.DATE);
     }
 }

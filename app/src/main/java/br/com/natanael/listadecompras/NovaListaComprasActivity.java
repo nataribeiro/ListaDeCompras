@@ -1,27 +1,29 @@
 package br.com.natanael.listadecompras;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
+import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
 import br.com.natanael.listadecompras.dao.bd.ListaComprasDaoBd;
+import br.com.natanael.listadecompras.dao.bd.ListaComprasItemDaoDb;
 
 public class NovaListaComprasActivity extends AppCompatActivity {
     private final static int AddProdutoRequest = 1;
+    private final static int EditProdutoRequest = 2;
 
     private static ListaCompras listaAtual;
     ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(this);
+    ListaComprasItemDaoDb DAOListaItem = new ListaComprasItemDaoDb(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,10 @@ public class NovaListaComprasActivity extends AppCompatActivity {
     }
 
     private void PopulaListView(){
-        ListaComprasAdapter adapter = new ListaComprasAdapter(this, listaAtual);
+        ListaComprasAdapter adapter = new ListaComprasAdapter(this, listaAtual, false);
         ListView listView = (ListView)findViewById(R.id.listView_addedProducts);
         listView.setAdapter(adapter);
+        registerForContextMenu(listView);
     }
 
     @Override
@@ -88,17 +91,50 @@ public class NovaListaComprasActivity extends AppCompatActivity {
             DAOListaCompras.insert(listaAtual);
         else
             DAOListaCompras.update(listaAtual);
+        setResult(RESULT_OK);
         this.finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AddProdutoRequest) {
+        if (requestCode == AddProdutoRequest || requestCode == EditProdutoRequest) {
             if(resultCode == Activity.RESULT_OK){
                 DAOListaCompras = new ListaComprasDaoBd(this);
                 listaAtual = DAOListaCompras.procurarPorId(data.getIntExtra("id_listacompras", -1));
                 PopulaListView();
             }
         }
+    }
+
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, v.getId(), 0, "Editar");
+        menu.add(0, v.getId(), 0, "Excluir");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+                .getMenuInfo();
+
+        if (item.getTitle().equals("Editar")) {
+
+            Intent it = new Intent(getBaseContext(), AddProdutoActivity.class);
+            it.putExtra("id_listacompras", listaAtual.getId());
+            it.putExtra("edit_produto", listaAtual.getListaItens().get(info.position).getId());
+            startActivityForResult(it, EditProdutoRequest);
+
+        } else if(item.getTitle().equals("Excluir")) {
+
+            int id = listaAtual.getListaItens().get(info.position).getId();
+            listaAtual.getListaItens().remove(info.position);
+            ListaComprasItem objItem = DAOListaItem.procurarPorId(id);
+            DAOListaItem.excluir(objItem);
+
+        } else {
+            return false;
+        }
+        return true;
     }
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -49,8 +48,9 @@ public class ListaHistoricoAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.list_historico_item, null);
             TextView nomeProd = (TextView) convertView.findViewById(R.id.id_dataCompra);
             nomeProd.setText(historico.get(position).getData());
+            //Trocar para valor total da compra quando implementar a fragment com inserção de valores de produtos
             TextView valorProd = (TextView) convertView.findViewById(R.id.id_valorCompra);
-            valorProd.setText(String.valueOf(historico.get(position).getValorTotalLista()));
+            valorProd.setText(String.valueOf(historico.get(position).getQuantidadeTotalItens()));
         }
 
         return convertView;
