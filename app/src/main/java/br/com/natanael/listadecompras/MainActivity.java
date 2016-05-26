@@ -26,8 +26,10 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
+import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
 import br.com.natanael.listadecompras.dao.bd.BancoDadosOpenHelper;
 import br.com.natanael.listadecompras.dao.bd.ListaComprasDaoBd;
+import br.com.natanael.listadecompras.dao.bd.ListaComprasItemDaoDb;
 
 public class MainActivity extends AppCompatActivity {
     private final static int NovaListaComprasRequest = 1;
@@ -54,9 +56,10 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listaComprasAtual.finalizarLista();
+                listaComprasAtual.finalizarLista(getBaseContext());
                 ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(getBaseContext());
                 DAOListaCompras.update(listaComprasAtual);
+                InstanciaTabFragment();
             }
         });
         builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
@@ -87,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (requestCode == NovaListaComprasRequest) {
             if(resultCode == Activity.RESULT_OK){
                 InstanciaTabFragment();
@@ -153,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             BancoDadosOpenHelper bdHelper = new BancoDadosOpenHelper(this);
             bdHelper.ClearDatabase();
             Toast.makeText(this, "Base de dados foi zerada", Toast.LENGTH_SHORT).show();
+            InstanciaTabFragment();
         }
         if (id == R.id.action_sair) {
             this.finish();

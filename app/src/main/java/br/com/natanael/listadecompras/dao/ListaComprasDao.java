@@ -10,4 +10,5 @@ import br.com.natanael.listadecompras.Estruturas.ListaCompras;
 public interface ListaComprasDao extends GenericDao<ListaCompras> {
     public ListaCompras retornaListaNaoFinalizada();
     public List<ListaCompras> retornaListasFinalizadas();
+    public ListaCompras carregaListaFinalizada(Integer id);
 }

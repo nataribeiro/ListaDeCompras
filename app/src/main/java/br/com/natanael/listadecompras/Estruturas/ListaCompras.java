@@ -20,13 +20,16 @@ public class ListaCompras {
     private Boolean finalizado;
     private List<ListaComprasItem> listaItens;
 
-    public ListaCompras(Context contexto, Integer id, Calendar data, double valor_total, String finalizado){
+    public ListaCompras(Context contexto, Integer id, Calendar data, double valor_total, String finalizado, Boolean CarregaApenasItensComprados){
         this.id = id;
         this.data = data;
         this.valor_total = valor_total;
         this.finalizado = finalizado.equals("S");
         ListaComprasItemDaoDb DAOListaItem = new ListaComprasItemDaoDb(contexto);
-        this.listaItens = DAOListaItem.carregaItensDaListaCompras(id);
+        if(CarregaApenasItensComprados)
+            this.listaItens = DAOListaItem.carregaItensCompradosListaCompras(id);
+        else
+            this.listaItens = DAOListaItem.carregaItensDaListaCompras(id);
         this.quantidadeTotalItens = 0;
         for (ListaComprasItem item : listaItens) {
             this.quantidadeTotalItens += item.getQuantidade();
@@ -92,7 +95,7 @@ public class ListaCompras {
         this.finalizado = finalizado;
     }
 
-    public void finalizarLista(){
+    public void finalizarLista(Context contexto){
         this.finalizado = true;
         this.data = Calendar.getInstance();
         data.get(Calendar.DATE);

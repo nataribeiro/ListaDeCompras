@@ -140,4 +140,53 @@ public class ListaComprasItemDaoDb implements ListaComprasItemDao {
         banco.close();
         return listaItens;
     }
+
+    public List<ListaComprasItem> carregaItensComprados() {
+        List<ListaComprasItem> listaItens = new ArrayList<ListaComprasItem>();
+        SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
+        Cursor cursor = banco.query("ListaComprasItem",
+                new String[] {"id", "id_listacompras", "sequencia", "id_produto", "quantidade", "valor_unitario", "valor_total","comprado"},
+                "comprado=?", new String[] { "S" },
+                null, null, "sequencia");
+        while(cursor.moveToNext()){
+            ListaComprasItem item = new ListaComprasItem(contexto,
+                    cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("id_listacompras")),
+                    cursor.getInt(cursor.getColumnIndex("sequencia")),
+                    cursor.getInt(cursor.getColumnIndex("id_produto")),
+                    cursor.getInt(cursor.getColumnIndex("quantidade")),
+                    cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("comprado")).equals("S"));
+
+            listaItens.add(item);
+        }
+        banco.close();
+        return listaItens;
+    }
+
+    @Override
+    public List<ListaComprasItem> carregaItensCompradosListaCompras(int id_listacompras) {
+        List<ListaComprasItem> listaItens = new ArrayList<ListaComprasItem>();
+        SQLiteDatabase banco = bdOpenHelper.getReadableDatabase();
+        Cursor cursor = banco.query("ListaComprasItem",
+                new String[] {"id", "id_listacompras", "sequencia", "id_produto", "quantidade", "valor_unitario", "valor_total","comprado"},
+                "id_listacompras=? and comprado=?", new String[] { String.valueOf(id_listacompras), "S" },
+                null, null, "sequencia");
+        while(cursor.moveToNext()){
+            ListaComprasItem item = new ListaComprasItem(contexto,
+                    cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("id_listacompras")),
+                    cursor.getInt(cursor.getColumnIndex("sequencia")),
+                    cursor.getInt(cursor.getColumnIndex("id_produto")),
+                    cursor.getInt(cursor.getColumnIndex("quantidade")),
+                    cursor.getDouble(cursor.getColumnIndex("valor_unitario")),
+                    cursor.getDouble(cursor.getColumnIndex("valor_total")),
+                    cursor.getString(cursor.getColumnIndex("comprado")).equals("S"));
+
+            listaItens.add(item);
+        }
+        banco.close();
+        return listaItens;
+    }
 }

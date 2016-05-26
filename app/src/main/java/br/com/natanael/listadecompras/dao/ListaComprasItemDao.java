@@ -9,4 +9,5 @@ import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
  */
 public interface ListaComprasItemDao extends GenericDao<ListaComprasItem> {
     public List<ListaComprasItem> carregaItensDaListaCompras(int id_listacompras);
+    public List<ListaComprasItem> carregaItensCompradosListaCompras(int id_listacompras);
 }

@@ -1,6 +1,7 @@
 package br.com.natanael.listadecompras;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -97,6 +100,8 @@ public class NovaListaComprasActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         if (requestCode == AddProdutoRequest || requestCode == EditProdutoRequest) {
             if(resultCode == Activity.RESULT_OK){
                 DAOListaCompras = new ListaComprasDaoBd(this);
@@ -131,6 +136,7 @@ public class NovaListaComprasActivity extends AppCompatActivity {
             listaAtual.getListaItens().remove(info.position);
             ListaComprasItem objItem = DAOListaItem.procurarPorId(id);
             DAOListaItem.excluir(objItem);
+            PopulaListView();
 
         } else {
             return false;

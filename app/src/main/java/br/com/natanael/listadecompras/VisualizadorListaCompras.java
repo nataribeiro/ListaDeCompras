@@ -20,7 +20,7 @@ public class VisualizadorListaCompras extends AppCompatActivity {
         int id_lista = it.getIntExtra("id_lista", -1);
 
         ListaComprasDaoBd DAOListaCompras = new ListaComprasDaoBd(this);
-        ListaCompras lista = DAOListaCompras.procurarPorId(id_lista);
+        ListaCompras lista = DAOListaCompras.carregaListaFinalizada(id_lista);
 
         TextView textView_data = (TextView) findViewById(R.id.textView_dataListaCompras);
         textView_data.setText("Data da compra: " + lista.getData());

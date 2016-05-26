@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import br.com.natanael.listadecompras.Estruturas.ListaCompras;
+import br.com.natanael.listadecompras.Estruturas.ListaComprasItem;
+import br.com.natanael.listadecompras.dao.bd.ListaComprasItemDaoDb;
 
 /**
  * Created by Natanael on 16/05/2016.
@@ -51,7 +54,17 @@ public class ListaComprasAdapter extends BaseAdapter {
             TextView valorProd = (TextView) convertView.findViewById(R.id.id_quantidadeProduto);
             valorProd.setText(String.valueOf(listaCompras.getListaItens().get(position).getQuantidade()));
             CheckBox checkBox_comprado = (CheckBox) convertView.findViewById(R.id.checkBox_comprado);
+            checkBox_comprado.setTag(position);
             checkBox_comprado.setChecked(listaCompras.getListaItens().get(position).getComprado());
+            checkBox_comprado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ListaComprasItemDaoDb DAOListaItem = new ListaComprasItemDaoDb(buttonView.getContext());
+                    ListaComprasItem item =listaCompras.getListaItens().get(Integer.parseInt(buttonView.getTag().toString()));
+                    item.setComprado(isChecked);
+                    DAOListaItem.update(item);
+                }
+            });
             if(!checkBoxHabilitado)
                 checkBox_comprado.setVisibility(View.INVISIBLE);
         }

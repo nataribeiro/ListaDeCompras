@@ -39,6 +39,8 @@ public class AddProdutoActivity extends AppCompatActivity {
             editText_nomeProduto.setEnabled(false);
             EditText editText_quantidade = (EditText) findViewById(R.id.editText_quantidade);
             editText_quantidade.setText(String.valueOf(listaComprasItem.getQuantidade()));
+            Button button = (Button)findViewById(R.id.button_addItem);
+            button.setText("Salvar");
 
         } else {
             EditMode = false;
@@ -69,8 +71,6 @@ public class AddProdutoActivity extends AppCompatActivity {
 
             listaComprasItem.setQuantidade(quantidade);
             DAOListaItem.update(listaComprasItem);
-            Button button = (Button)findViewById(R.id.button_addItem);
-            button.setText("Salvar");
 
         } else {
             Produto produto = DAOProduto.procurarPorNome(editText_nomeProduto.getText().toString());
